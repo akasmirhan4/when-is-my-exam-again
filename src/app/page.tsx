@@ -1,35 +1,78 @@
-import Link from "next/link";
+"use client";
+
+import { useEffect, useState } from "react";
+
+// singapore time 2025-08-29T08:00:00Z
+const examDatetime = new Date("2025-08-29T08:00:00Z");
+const now = new Date();
 
 export default function HomePage() {
+  const [daysLeft, setDaysLeft] = useState(
+    Math.floor(
+      (examDatetime.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
+    ),
+  );
+  const [currentDate, setCurrentDate] = useState(
+    now.toLocaleDateString("en-SG"),
+  );
+  const [currentTime, setCurrentTime] = useState(
+    now.toLocaleTimeString("en-SG"),
+  );
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date();
+      setCurrentDate(now.toLocaleDateString("en-SG"));
+      setCurrentTime(now.toLocaleTimeString("en-SG"));
+      setDaysLeft(
+        Math.floor(
+          (examDatetime.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
+        ),
+      );
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-        <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-          Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
-        </h1>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://create.t3.gg/en/usage/first-steps"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">First Steps →</h3>
-            <div className="text-lg">
-              Just the basics - Everything you need to know to set up your
-              database and authentication.
-            </div>
-          </Link>
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://create.t3.gg/en/introduction"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">Documentation →</h3>
-            <div className="text-lg">
-              Learn more about Create T3 App, the libraries it uses, and how to
-              deploy it.
-            </div>
-          </Link>
+    <main className="flex h-screen items-center justify-center bg-slate-100">
+      <div className="flex flex-col text-center">
+        <div className="text-slate-400">
+          <h1 className="mb-4 text-4xl font-bold">Countdown to Exam</h1>
+          <p>
+            <strong>Exam Date:</strong>{" "}
+            {examDatetime.toLocaleDateString("en-SG")}
+          </p>
+          <p>
+            <strong>Now:</strong> {currentDate} {currentTime}
+          </p>
+        </div>
+        <div className="my-16 text-9xl text-slate-800">
+          <p>
+            <strong>
+              {Math.floor(
+                (examDatetime.getTime() - now.getTime()) /
+                  (1000 * 60 * 60 * 24),
+              )}
+            </strong>
+            {daysLeft === 1 ? " day" : " days"}
+            {" left"}
+          </p>
+        </div>
+        <div>
+          {/* in months then days */}
+          <p className="font-semibold text-slate-400">
+            {Math.floor(
+              (examDatetime.getTime() - now.getTime()) /
+                (1000 * 60 * 60 * 24 * 30),
+            )}{" "}
+            {" months & "}
+            {Math.floor(
+              ((examDatetime.getTime() - now.getTime()) /
+                (1000 * 60 * 60 * 24)) %
+                30,
+            )}
+            {" days"}
+          </p>
         </div>
       </div>
     </main>
