@@ -46,32 +46,25 @@ export default function HomePage() {
             <strong>Now:</strong> {currentDate} {currentTime}
           </p>
         </div>
-        <div className="my-16 text-9xl text-slate-800">
-          <p>
-            <strong>
-              {Math.floor(
-                (examDatetime.getTime() - now.getTime()) /
-                  (1000 * 60 * 60 * 24),
-              )}
-            </strong>
-            {daysLeft === 1 ? " day" : " days"}
-            {" left"}
+        <div className="my-16">
+          <p className="mb-2 text-5xl text-slate-200 line-through">
+            <strong>{"0 "}</strong>
+            days left
+          </p>
+          <p className="text-8xl font-bold text-slate-800">
+            {`It's Exam Day D:`}
           </p>
         </div>
         <div>
           {/* in months then days */}
           <p className="font-semibold text-slate-400">
-            {Math.floor(
-              (examDatetime.getTime() - now.getTime()) /
-                (1000 * 60 * 60 * 24 * 30),
-            )}{" "}
-            {" months & "}
-            {Math.floor(
-              ((examDatetime.getTime() - now.getTime()) /
-                (1000 * 60 * 60 * 24)) %
-                30,
-            )}
-            {" days"}
+            {(() => {
+              const msSinceExam = now.getTime() - examDatetime.getTime();
+              const totalDays = Math.floor(msSinceExam / (1000 * 60 * 60 * 24));
+              const months = Math.floor(totalDays / 30);
+              const days = totalDays % 30;
+              return `${months} months & ${days} days since exam day`;
+            })()}
           </p>
         </div>
       </div>
